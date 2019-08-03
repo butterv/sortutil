@@ -78,3 +78,11 @@ func (s *Sort) Order(name string, order Order) {
 
 	sort.Slice(s.slice, sortFunc)
 }
+
+func (s *Sort) Asc() {
+
+}
+
+func (s *Sort) Desc() {
+
+}
