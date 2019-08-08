@@ -64,7 +64,7 @@ func TestSort_Order_Asc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
 		}
-		New(tempTests).Order("ID", ASC)
+		Order(tempTests).Asc("ID")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
@@ -83,7 +83,7 @@ func TestSort_Order_Asc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%s, ", test.Capital)
 		}
-		New(tempTests).Order("Capital", ASC)
+		Order(tempTests).Asc("Capital")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%s, ", test.Capital)
@@ -102,7 +102,7 @@ func TestSort_Order_Asc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%f, ", test.Latitude)
 		}
-		New(tempTests).Order("Latitude", ASC)
+		Order(tempTests).Asc("Latitude")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%f, ", test.Latitude)
@@ -121,7 +121,7 @@ func TestSort_Order_Asc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%f, ", test.Longitude)
 		}
-		New(tempTests).Order("Longitude", ASC)
+		Order(tempTests).Asc("Longitude")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%f, ", test.Longitude)
@@ -145,7 +145,7 @@ func TestSort_Order_Desc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
 		}
-		New(tempTests).Order("ID", DESC)
+		Order(tempTests).Desc("ID")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
@@ -164,7 +164,7 @@ func TestSort_Order_Desc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%s, ", test.Capital)
 		}
-		New(tempTests).Order("Capital", DESC)
+		Order(tempTests).Desc("Capital")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%s, ", test.Capital)
@@ -183,7 +183,7 @@ func TestSort_Order_Desc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%f, ", test.Latitude)
 		}
-		New(tempTests).Order("Latitude", DESC)
+		Order(tempTests).Desc("Latitude")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%f, ", test.Latitude)
@@ -202,7 +202,7 @@ func TestSort_Order_Desc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%f, ", test.Longitude)
 		}
-		New(tempTests).Order("Longitude", DESC)
+		Order(tempTests).Desc("Longitude")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%fs, ", test.Longitude)
@@ -239,7 +239,7 @@ func BenchmarkSort_Order_By_ID_Asc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("ID", ASC)
+	Order(tempTests).Asc("ID")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].ID < tempTests[j].ID
@@ -263,7 +263,7 @@ func BenchmarkSort_Order_By_Capital_Asc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("Capital", ASC)
+	Order(tempTests).Asc("Capital")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].Capital < tempTests[j].Capital
@@ -287,7 +287,7 @@ func BenchmarkSort_Order_By_Latitude_Asc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("Latitude", ASC)
+	Order(tempTests).Asc("Latitude")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].Latitude < tempTests[j].Latitude
@@ -311,7 +311,7 @@ func BenchmarkSort_Order_By_Longitude_Asc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("Longitude", ASC)
+	Order(tempTests).Asc("Longitude")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].Longitude < tempTests[j].Longitude
@@ -335,7 +335,7 @@ func BenchmarkSort_Order_By_ID_Desc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("ID", DESC)
+	Order(tempTests).Desc("ID")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].ID > tempTests[j].ID
@@ -359,7 +359,7 @@ func BenchmarkSort_Order_By_Capital_Desc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("Capital", DESC)
+	Order(tempTests).Desc("Capital")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].Capital > tempTests[j].Capital
@@ -383,7 +383,7 @@ func BenchmarkSort_Order_By_Latitude_Desc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("Latitude", DESC)
+	Order(tempTests).Desc("Latitude")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].Latitude > tempTests[j].Latitude
@@ -407,7 +407,7 @@ func BenchmarkSort_Order_By_Longitude_Desc(b *testing.B) {
 	}
 
 	b.ResetTimer()
-	New(tempTests).Order("Longitude", DESC)
+	Order(tempTests).Desc("Longitude")
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].Longitude > tempTests[j].Longitude
