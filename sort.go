@@ -6,17 +6,23 @@ import (
 	"sort"
 )
 
+// OrderType kind of sort, ASC or DESC.
 type OrderType uint
 
 const (
+	// ASC in ascending order in any field.
 	ASC OrderType = iota + 1
+	// DESC in descending order in any field.
 	DESC
 )
 
+// Sort struct has list of targets.
 type Sort struct {
 	slice interface{}
 }
 
+// Order is initialize Sort.
+// `slice` type should be Slice or Array.
 func Order(slice interface{}) *Sort {
 	rv := reflect.ValueOf(slice)
 	kind := rv.Type().Kind()
@@ -28,10 +34,12 @@ func Order(slice interface{}) *Sort {
 	return &Sort{slice: slice}
 }
 
+// Asc in ascending order in any field.
 func (s *Sort) Asc(name string) {
 	s.sort(name, ASC)
 }
 
+// Desc in descending order in any field.
 func (s *Sort) Desc(name string) {
 	s.sort(name, DESC)
 }
