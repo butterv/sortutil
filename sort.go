@@ -6,10 +6,10 @@ import (
 	"sort"
 )
 
-type Order uint
+type OrderType uint
 
 const (
-	ASC Order = iota + 1
+	ASC OrderType = iota + 1
 	DESC
 )
 
@@ -17,7 +17,7 @@ type Sort struct {
 	slice interface{}
 }
 
-func New(slice interface{}) *Sort {
+func Order(slice interface{}) *Sort {
 	rv := reflect.ValueOf(slice)
 	kind := rv.Type().Kind()
 
@@ -28,7 +28,15 @@ func New(slice interface{}) *Sort {
 	return &Sort{slice: slice}
 }
 
-func (s *Sort) Order(name string, order Order) {
+func (s *Sort) Asc(name string) {
+	s.sort(name, ASC)
+}
+
+func (s *Sort) Desc(name string) {
+	s.sort(name, DESC)
+}
+
+func (s *Sort) sort(name string, orderType OrderType) {
 	rv := reflect.ValueOf(s.slice)
 	t := rv.Index(0).FieldByName(name).Type()
 
@@ -37,13 +45,13 @@ func (s *Sort) Order(name string, order Order) {
 	switch t.Kind() {
 	// case reflect.Bool:
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		if order == ASC {
+		if orderType == ASC {
 			sortFunc = func(i, j int) bool { return rv.Index(i).FieldByName(name).Int() < rv.Index(j).FieldByName(name).Int() }
 		} else {
 			sortFunc = func(i, j int) bool { return rv.Index(i).FieldByName(name).Int() > rv.Index(j).FieldByName(name).Int() }
 		}
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		if order == ASC {
+		if orderType == ASC {
 			sortFunc = func(i, j int) bool {
 				return rv.Index(i).FieldByName(name).Uint() < rv.Index(j).FieldByName(name).Uint()
 			}
@@ -53,7 +61,7 @@ func (s *Sort) Order(name string, order Order) {
 			}
 		}
 	case reflect.Float32, reflect.Float64:
-		if order == ASC {
+		if orderType == ASC {
 			sortFunc = func(i, j int) bool {
 				return rv.Index(i).FieldByName(name).Float() < rv.Index(j).FieldByName(name).Float()
 			}
@@ -63,7 +71,7 @@ func (s *Sort) Order(name string, order Order) {
 			}
 		}
 	case reflect.String:
-		if order == ASC {
+		if orderType == ASC {
 			sortFunc = func(i, j int) bool {
 				return rv.Index(i).FieldByName(name).String() < rv.Index(j).FieldByName(name).String()
 			}
@@ -77,14 +85,4 @@ func (s *Sort) Order(name string, order Order) {
 	}
 
 	sort.Slice(s.slice, sortFunc)
-}
-
-// method chain
-func (s *Sort) Asc() {
-
-}
-
-// method chain
-func (s *Sort) Desc() {
-
 }
