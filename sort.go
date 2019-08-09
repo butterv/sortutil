@@ -1,6 +1,7 @@
 package sortutil
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"sort"
@@ -18,7 +19,8 @@ const (
 
 // Sort struct has list of targets.
 type Sort struct {
-	slice interface{}
+	slice     interface{}
+	sortCount uint
 }
 
 // Order is initialize Sort.
@@ -35,16 +37,26 @@ func Order(slice interface{}) *Sort {
 }
 
 // Asc in ascending order in any field.
-func (s *Sort) Asc(name string) {
-	s.sort(name, ASC)
+func (s *Sort) Asc(name string) *Sort {
+	if err := s.sort(name, ASC); err != nil {
+		// TODO output error
+	}
+	return s
 }
 
 // Desc in descending order in any field.
-func (s *Sort) Desc(name string) {
-	s.sort(name, DESC)
+func (s *Sort) Desc(name string) *Sort {
+	if err := s.sort(name, DESC); err != nil {
+		// TODO output error
+	}
+	return s
 }
 
-func (s *Sort) sort(name string, orderType OrderType) {
+func (s *Sort) sort(name string, orderType OrderType) error {
+	if s.sortCount > 2 {
+		return errors.New("sorting more than 3 times is not supported")
+	}
+
 	rv := reflect.ValueOf(s.slice)
 	t := rv.Index(0).FieldByName(name).Type()
 
@@ -93,4 +105,6 @@ func (s *Sort) sort(name string, orderType OrderType) {
 	}
 
 	sort.Slice(s.slice, sortFunc)
+	s.sortCount++
+	return nil
 }
