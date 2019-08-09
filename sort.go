@@ -1,7 +1,6 @@
 package sortutil
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"sort"
@@ -19,8 +18,8 @@ const (
 
 // Sort struct has list of targets.
 type Sort struct {
-	slice     interface{}
-	sortCount uint
+	slice            interface{}
+	sortedFieldNames []string
 }
 
 // Order is initialize Sort.
@@ -38,29 +37,28 @@ func Order(slice interface{}) *Sort {
 
 // Asc in ascending order in any field.
 func (s *Sort) Asc(name string) *Sort {
-	if err := s.sort(name, ASC); err != nil {
-		// TODO output error
-	}
+	s.sort(name, ASC)
 	return s
 }
 
 // Desc in descending order in any field.
 func (s *Sort) Desc(name string) *Sort {
-	if err := s.sort(name, DESC); err != nil {
-		// TODO output error
-	}
+	s.sort(name, DESC)
 	return s
 }
 
-func (s *Sort) sort(name string, orderType OrderType) error {
-	if s.sortCount > 2 {
-		return errors.New("sorting more than 3 times is not supported")
+func (s *Sort) sort(name string, orderType OrderType) {
+	if s.sorted(name) || len(s.sortedFieldNames) > 2 {
+		fmt.Printf("No more can be sorted: by %s", name)
+		return
 	}
 
 	rv := reflect.ValueOf(s.slice)
 	t := rv.Index(0).FieldByName(name).Type()
 
 	var sortFunc func(i, j int) bool
+
+	// TODO Multiple sort
 
 	switch t.Kind() {
 	// case reflect.Bool:
@@ -105,6 +103,15 @@ func (s *Sort) sort(name string, orderType OrderType) error {
 	}
 
 	sort.Slice(s.slice, sortFunc)
-	s.sortCount++
-	return nil
+
+	s.sortedFieldNames = append(s.sortedFieldNames, name)
+}
+
+func (s *Sort) sorted(name string) bool {
+	for _, sortedFieldName := range s.sortedFieldNames {
+		if sortedFieldName == name {
+			return true
+		}
+	}
+	return false
 }

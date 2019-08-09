@@ -64,7 +64,7 @@ func TestSort_Order_Asc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
 		}
-		Order(tempTests).Asc("ID")
+		Order(tempTests).Asc("ID").Desc("ID").Asc("ID")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
