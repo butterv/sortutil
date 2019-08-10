@@ -56,10 +56,10 @@ func main() {
         },
     }
 
-    sortutil.New(countries).Order("ID", sortutil.ASC)
+    sortutil.Order(countries).Asc("ID")
 
     // or
-    // sortutil.New(countries).Order("ID", sortutil.DESC)
+    // sortutil.Order(countries).Desc("ID")
 }
 ```
 
