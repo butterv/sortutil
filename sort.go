@@ -37,18 +37,29 @@ func Order(slice interface{}) *Sort {
 
 // Asc in ascending order in any field.
 func (s *Sort) Asc(name string) *Sort {
-	s.sort(name, ASC)
+	switch len(s.sortedFieldNames) {
+	case 0:
+		s.first(name, ASC)
+	case 1:
+		s.second(name, ASC)
+	case 2:
+		s.third(name, ASC)
+	default:
+		fmt.Printf("No more can be sorted: by %s", name)
+		return s
+	}
+
 	return s
 }
 
 // Desc in descending order in any field.
 func (s *Sort) Desc(name string) *Sort {
-	s.sort(name, DESC)
+	s.first(name, DESC)
 	return s
 }
 
-func (s *Sort) sort(name string, orderType OrderType) {
-	if s.sorted(name) || len(s.sortedFieldNames) > 2 {
+func (s *Sort) first(name string, orderType OrderType) {
+	if s.sorted(name) {
 		fmt.Printf("No more can be sorted: by %s", name)
 		return
 	}
@@ -58,10 +69,7 @@ func (s *Sort) sort(name string, orderType OrderType) {
 
 	var sortFunc func(i, j int) bool
 
-	// TODO Multiple sort
-
 	switch t.Kind() {
-	// case reflect.Bool:
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		if orderType == ASC {
 			sortFunc = func(i, j int) bool { return rv.Index(i).FieldByName(name).Int() < rv.Index(j).FieldByName(name).Int() }
@@ -103,7 +111,6 @@ func (s *Sort) sort(name string, orderType OrderType) {
 	}
 
 	sort.Slice(s.slice, sortFunc)
-
 	s.sortedFieldNames = append(s.sortedFieldNames, name)
 }
 
