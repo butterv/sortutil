@@ -67,6 +67,8 @@ func (s *Sort) first(name string, orderType OrderType) {
 	rv := reflect.ValueOf(s.slice)
 	t := rv.Index(0).FieldByName(name).Type()
 
+	// TODO Add sort func to list(max size 3)
+
 	var sortFunc func(i, j int) bool
 
 	switch t.Kind() {
@@ -112,6 +114,14 @@ func (s *Sort) first(name string, orderType OrderType) {
 
 	sort.Slice(s.slice, sortFunc)
 	s.sortedFieldNames = append(s.sortedFieldNames, name)
+}
+
+func (s *Sort) second(name string, orderType OrderType) {
+
+}
+
+func (s *Sort) third(name string, orderType OrderType) {
+
 }
 
 func (s *Sort) sorted(name string) bool {
