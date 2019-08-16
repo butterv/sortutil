@@ -64,6 +64,8 @@ func TestSort_Order_Asc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
 		}
+
+		// TODO Add sort func to list(max size 3)
 		Order(tempTests).Asc("ID").Desc("ID").Asc("ID")
 		t.Log("=== after ===")
 		for _, test := range tempTests {
