@@ -166,6 +166,7 @@ func (s *Sort) addSortFunc(name string, orderType OrderType) {
 	s.sortFuncs = append(s.sortFuncs, sortFunc)
 }
 
+// Exec performs a sort
 func (s *Sort) Exec() {
 
 	// TODO(istsh): make sort functions
