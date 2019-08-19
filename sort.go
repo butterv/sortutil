@@ -43,12 +43,8 @@ func Order(slice interface{}) *Sort {
 // Asc in ascending order in any field.
 func (s *Sort) Asc(name string) *Sort {
 	switch len(s.sortedFieldNames) {
-	case 0:
-		s.first(name, ASC)
-	case 1:
-		s.second(name, ASC)
-	case 2:
-		s.third(name, ASC)
+	case 0, 1, 2:
+		s.reserveSort(name, DESC)
 	default:
 		fmt.Printf("No more can be sorted: by %s", name)
 		return s
@@ -60,12 +56,8 @@ func (s *Sort) Asc(name string) *Sort {
 // Desc in descending order in any field.
 func (s *Sort) Desc(name string) *Sort {
 	switch len(s.sortedFieldNames) {
-	case 0:
-		s.first(name, DESC)
-	case 1:
-		s.second(name, DESC)
-	case 2:
-		s.third(name, DESC)
+	case 0, 1, 2:
+		s.reserveSort(name, DESC)
 	default:
 		fmt.Printf("No more can be sorted: by %s", name)
 		return s
@@ -74,27 +66,7 @@ func (s *Sort) Desc(name string) *Sort {
 	return s
 }
 
-func (s *Sort) first(name string, orderType OrderType) {
-	if s.sorted(name) {
-		fmt.Printf("No more can be sorted: by %s", name)
-		return
-	}
-
-	s.addSortFunc(name, orderType)
-	s.sortedFieldNames = append(s.sortedFieldNames, name)
-}
-
-func (s *Sort) second(name string, orderType OrderType) {
-	if s.sorted(name) {
-		fmt.Printf("No more can be sorted: by %s", name)
-		return
-	}
-
-	s.addSortFunc(name, orderType)
-	s.sortedFieldNames = append(s.sortedFieldNames, name)
-}
-
-func (s *Sort) third(name string, orderType OrderType) {
+func (s *Sort) reserveSort(name string, orderType OrderType) {
 	if s.sorted(name) {
 		fmt.Printf("No more can be sorted: by %s", name)
 		return
