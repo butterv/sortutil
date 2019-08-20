@@ -8,48 +8,62 @@ import (
 )
 
 type Test struct {
-	ID        uint64
-	Capital   string
-	Latitude  float32
-	Longitude float32
+	ID     uint64
+	Name   string
+	Age    uint
+	Height float32
+	Weight float32
 }
 
 var tests = []Test{
 	{
-		ID:        3,
-		Capital:   "Tokyo",
-		Latitude:  35.67581,
-		Longitude: 139.74507,
+		ID:     1,
+		Name:   "Tom",
+		Age:    20,
+		Height: 170.5,
+		Weight: 70.0,
 	},
 	{
-		ID:        5,
-		Capital:   "Seoul",
-		Latitude:  37.531084,
-		Longitude: 126.91583,
+		ID:     7,
+		Name:   "Bob",
+		Age:    30,
+		Height: 180.5,
+		Weight: 80.0,
 	},
 	{
-		ID:        2,
-		Capital:   "Beijing",
-		Latitude:  39.908222,
-		Longitude: 116.391027,
+		ID:     5,
+		Name:   "Zach",
+		Age:    30,
+		Height: 175.0,
+		Weight: 75.0,
 	},
 	{
-		ID:        1,
-		Capital:   "Washington D.C.",
-		Latitude:  38.897159,
-		Longitude: -77.036207,
+		ID:     3,
+		Name:   "Angie",
+		Age:    20,
+		Height: 160.5,
+		Weight: 55.0,
 	},
 	{
-		ID:        4,
-		Capital:   "London",
-		Latitude:  51.499183,
-		Longitude: -0.12464066,
+		ID:     6,
+		Name:   "Sam",
+		Age:    25,
+		Height: 178.5,
+		Weight: 73.0,
 	},
 	{
-		ID:        6,
-		Capital:   "Brasilia",
-		Latitude:  -15.799668,
-		Longitude: -47.864154,
+		ID:     2,
+		Name:   "Taro",
+		Age:    18,
+		Height: 179.5,
+		Weight: 70.0,
+	},
+	{
+		ID:     4,
+		Name:   "Kim",
+		Age:    25,
+		Height: 150.2,
+		Weight: 48.0,
 	},
 }
 
@@ -65,8 +79,7 @@ func TestSort_Order_Asc(t *testing.T) {
 			t.Logf("%d, ", test.ID)
 		}
 
-		// TODO Add sort func to list(max size 3)
-		Order(tempTests).Asc("ID").Desc("ID").Asc("ID")
+		Order(tempTests).Asc("ID").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
@@ -80,57 +93,57 @@ func TestSort_Order_Asc(t *testing.T) {
 		}
 	})
 
-	t.Run("order by Capital asc", func(t *testing.T) {
+	t.Run("order by Name asc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("%s, ", test.Capital)
+			t.Logf("%s, ", test.Name)
 		}
-		Order(tempTests).Asc("Capital")
+		Order(tempTests).Asc("Name").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("%s, ", test.Capital)
+			t.Logf("%s, ", test.Name)
 		}
 
 		sortFunc := func(i, j int) bool {
-			return tempTests[i].Capital < tempTests[j].Capital
+			return tempTests[i].Name < tempTests[j].Name
 		}
 		if !sort.SliceIsSorted(tempTests, sortFunc) {
 			t.Fatal("incomplete sort")
 		}
 	})
 
-	t.Run("order by Latitude asc", func(t *testing.T) {
+	t.Run("order by Height asc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("%f, ", test.Latitude)
+			t.Logf("%f, ", test.Height)
 		}
-		Order(tempTests).Asc("Latitude")
+		Order(tempTests).Asc("Height").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("%f, ", test.Latitude)
+			t.Logf("%f, ", test.Height)
 		}
 
 		sortFunc := func(i, j int) bool {
-			return tempTests[i].Latitude < tempTests[j].Latitude
+			return tempTests[i].Height < tempTests[j].Height
 		}
 		if !sort.SliceIsSorted(tempTests, sortFunc) {
 			t.Fatal("incomplete sort")
 		}
 	})
 
-	t.Run("order by Longitude asc", func(t *testing.T) {
+	t.Run("order by Age asc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("%f, ", test.Longitude)
+			t.Logf("%d, ", test.Age)
 		}
-		Order(tempTests).Asc("Longitude")
+		Order(tempTests).Asc("Age").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("%f, ", test.Longitude)
+			t.Logf("%d, ", test.Age)
 		}
 
 		sortFunc := func(i, j int) bool {
-			return tempTests[i].Longitude < tempTests[j].Longitude
+			return tempTests[i].Age < tempTests[j].Age
 		}
 		if !sort.SliceIsSorted(tempTests, sortFunc) {
 			t.Fatal("incomplete sort")
@@ -147,7 +160,7 @@ func TestSort_Order_Desc(t *testing.T) {
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
 		}
-		Order(tempTests).Desc("ID")
+		Order(tempTests).Desc("ID").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
 			t.Logf("%d, ", test.ID)
@@ -161,57 +174,57 @@ func TestSort_Order_Desc(t *testing.T) {
 		}
 	})
 
-	t.Run("order by Capital desc", func(t *testing.T) {
+	t.Run("order by Name desc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("%s, ", test.Capital)
+			t.Logf("%s, ", test.Name)
 		}
-		Order(tempTests).Desc("Capital")
+		Order(tempTests).Desc("Name").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("%s, ", test.Capital)
+			t.Logf("%s, ", test.Name)
 		}
 
 		sortFunc := func(i, j int) bool {
-			return tempTests[i].Capital > tempTests[j].Capital
+			return tempTests[i].Name > tempTests[j].Name
 		}
 		if !sort.SliceIsSorted(tempTests, sortFunc) {
 			t.Fatal("incomplete sort")
 		}
 	})
 
-	t.Run("order by Latitude desc", func(t *testing.T) {
+	t.Run("order by Weight desc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("%f, ", test.Latitude)
+			t.Logf("%f, ", test.Weight)
 		}
-		Order(tempTests).Desc("Latitude")
+		Order(tempTests).Desc("Weight").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("%f, ", test.Latitude)
+			t.Logf("%f, ", test.Weight)
 		}
 
 		sortFunc := func(i, j int) bool {
-			return tempTests[i].Latitude > tempTests[j].Latitude
+			return tempTests[i].Weight > tempTests[j].Weight
 		}
 		if !sort.SliceIsSorted(tempTests, sortFunc) {
 			t.Fatal("incomplete sort")
 		}
 	})
 
-	t.Run("order by Longitude desc", func(t *testing.T) {
+	t.Run("order by Height desc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("%f, ", test.Longitude)
+			t.Logf("%f, ", test.Height)
 		}
-		Order(tempTests).Desc("Longitude")
+		Order(tempTests).Desc("Height").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("%fs, ", test.Longitude)
+			t.Logf("%fs, ", test.Height)
 		}
 
 		sortFunc := func(i, j int) bool {
-			return tempTests[i].Longitude > tempTests[j].Longitude
+			return tempTests[i].Height > tempTests[j].Height
 		}
 		if !sort.SliceIsSorted(tempTests, sortFunc) {
 			t.Fatal("incomplete sort")
@@ -233,15 +246,16 @@ func BenchmarkSort_Order_By_ID_Asc(b *testing.B) {
 	var tempTests []Test
 	for i := 0; i < 10000; i++ {
 		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
 		})
 	}
 
 	b.ResetTimer()
-	Order(tempTests).Asc("ID")
+	Order(tempTests).Asc("ID").Exec()
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].ID < tempTests[j].ID
@@ -251,72 +265,50 @@ func BenchmarkSort_Order_By_ID_Asc(b *testing.B) {
 	}
 }
 
-func BenchmarkSort_Order_By_Capital_Asc(b *testing.B) {
+func BenchmarkSort_Order_By_Name_Asc(b *testing.B) {
 	rand.Seed(time.Now().Unix())
 
 	var tempTests []Test
 	for i := 0; i < 10000; i++ {
 		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
 		})
 	}
 
 	b.ResetTimer()
-	Order(tempTests).Asc("Capital")
+	Order(tempTests).Asc("Name").Exec()
 
 	sortFunc := func(i, j int) bool {
-		return tempTests[i].Capital < tempTests[j].Capital
+		return tempTests[i].Name < tempTests[j].Name
 	}
 	if !sort.SliceIsSorted(tempTests, sortFunc) {
 		b.Fatal("incomplete sort")
 	}
 }
 
-func BenchmarkSort_Order_By_Latitude_Asc(b *testing.B) {
+func BenchmarkSort_Order_By_Height_Asc(b *testing.B) {
 	rand.Seed(time.Now().Unix())
 
 	var tempTests []Test
 	for i := 0; i < 10000; i++ {
 		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
 		})
 	}
 
 	b.ResetTimer()
-	Order(tempTests).Asc("Latitude")
+	Order(tempTests).Asc("Height").Exec()
 
 	sortFunc := func(i, j int) bool {
-		return tempTests[i].Latitude < tempTests[j].Latitude
-	}
-	if !sort.SliceIsSorted(tempTests, sortFunc) {
-		b.Fatal("incomplete sort")
-	}
-}
-
-func BenchmarkSort_Order_By_Longitude_Asc(b *testing.B) {
-	rand.Seed(time.Now().Unix())
-
-	var tempTests []Test
-	for i := 0; i < 10000; i++ {
-		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
-		})
-	}
-
-	b.ResetTimer()
-	Order(tempTests).Asc("Longitude")
-
-	sortFunc := func(i, j int) bool {
-		return tempTests[i].Longitude < tempTests[j].Longitude
+		return tempTests[i].Height < tempTests[j].Height
 	}
 	if !sort.SliceIsSorted(tempTests, sortFunc) {
 		b.Fatal("incomplete sort")
@@ -329,15 +321,16 @@ func BenchmarkSort_Order_By_ID_Desc(b *testing.B) {
 	var tempTests []Test
 	for i := 0; i < 10000; i++ {
 		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
 		})
 	}
 
 	b.ResetTimer()
-	Order(tempTests).Desc("ID")
+	Order(tempTests).Desc("ID").Exec()
 
 	sortFunc := func(i, j int) bool {
 		return tempTests[i].ID > tempTests[j].ID
@@ -347,72 +340,50 @@ func BenchmarkSort_Order_By_ID_Desc(b *testing.B) {
 	}
 }
 
-func BenchmarkSort_Order_By_Capital_Desc(b *testing.B) {
+func BenchmarkSort_Order_By_Name_Desc(b *testing.B) {
 	rand.Seed(time.Now().Unix())
 
 	var tempTests []Test
 	for i := 0; i < 10000; i++ {
 		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
 		})
 	}
 
 	b.ResetTimer()
-	Order(tempTests).Desc("Capital")
+	Order(tempTests).Desc("Name").Exec()
 
 	sortFunc := func(i, j int) bool {
-		return tempTests[i].Capital > tempTests[j].Capital
+		return tempTests[i].Name > tempTests[j].Name
 	}
 	if !sort.SliceIsSorted(tempTests, sortFunc) {
 		b.Fatal("incomplete sort")
 	}
 }
 
-func BenchmarkSort_Order_By_Latitude_Desc(b *testing.B) {
+func BenchmarkSort_Order_By_Height_Desc(b *testing.B) {
 	rand.Seed(time.Now().Unix())
 
 	var tempTests []Test
 	for i := 0; i < 10000; i++ {
 		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
 		})
 	}
 
 	b.ResetTimer()
-	Order(tempTests).Desc("Latitude")
+	Order(tempTests).Desc("Height").Exec()
 
 	sortFunc := func(i, j int) bool {
-		return tempTests[i].Latitude > tempTests[j].Latitude
-	}
-	if !sort.SliceIsSorted(tempTests, sortFunc) {
-		b.Fatal("incomplete sort")
-	}
-}
-
-func BenchmarkSort_Order_By_Longitude_Desc(b *testing.B) {
-	rand.Seed(time.Now().Unix())
-
-	var tempTests []Test
-	for i := 0; i < 10000; i++ {
-		tempTests = append(tempTests, Test{
-			ID:        rand.Uint64(),
-			Capital:   randStringRunes(8),
-			Latitude:  rand.Float32(),
-			Longitude: rand.Float32(),
-		})
-	}
-
-	b.ResetTimer()
-	Order(tempTests).Desc("Longitude")
-
-	sortFunc := func(i, j int) bool {
-		return tempTests[i].Longitude > tempTests[j].Longitude
+		return tempTests[i].Height > tempTests[j].Height
 	}
 	if !sort.SliceIsSorted(tempTests, sortFunc) {
 		b.Fatal("incomplete sort")
