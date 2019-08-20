@@ -151,6 +151,35 @@ func TestSort_Order_Asc(t *testing.T) {
 	})
 }
 
+func TestSort_Order_Asc_And_Asc(t *testing.T) {
+	tempTests := make([]Test, len(tests))
+	copy(tempTests, tests)
+
+	t.Run("order by Age asc and Name asc", func(t *testing.T) {
+		t.Log("=== before ===")
+		for _, test := range tempTests {
+			t.Logf("Age: %d, Name: %s, ", test.Age, test.Name)
+		}
+
+		Order(tempTests).Asc("Age").Asc("Name").Exec()
+		t.Log("=== after ===")
+		for _, test := range tempTests {
+			t.Logf("Age: %d, Name: %s, ", test.Age, test.Name)
+		}
+
+		sortFunc := func(i, j int) bool {
+			if tempTests[i].Age < tempTests[j].Age {
+				return true
+			}
+			return tempTests[i].Name < tempTests[j].Name
+		}
+		if !sort.SliceIsSorted(tempTests, sortFunc) {
+			t.Fatal("incomplete sort")
+		}
+	})
+
+}
+
 func TestSort_Order_Desc(t *testing.T) {
 	tempTests := make([]Test, len(tests))
 	copy(tempTests, tests)
