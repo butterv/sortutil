@@ -13,53 +13,54 @@ import (
 
 func main() {
     countries := []struct{
-        ID uint64
-        Capital string
-        Latitude float32
-        Longitude float32
+        ID     uint64
+        Name   string
+        Age    uint
+        Height float32
+        Weight float32
     }{
         {
-            ID:        3,
-            Capital:   "Tokyo",
-            Latitude:  35.67581,
-            Longitude: 139.74507,
+            ID:     5,
+            Name:   "Zach",
+            Age:    30,
+            Height: 175.0,
+            Weight: 75.0,
         },
         {
-            ID:        5,
-            Capital:   "Seoul",
-            Latitude:  37.531084,
-            Longitude: 126.91583,
+            ID:     3,
+            Name:   "Angie",
+            Age:    20,
+            Height: 160.5,
+            Weight: 55.0,
         },
         {
-            ID:        2,
-            Capital:   "Beijing",
-            Latitude:  39.908222,
-            Longitude: 116.391027,
+            ID:     2,
+            Name:   "Taro",
+            Age:    18,
+            Height: 179.5,
+            Weight: 70.0,
         },
         {
-            ID:        1,
-            Capital:   "Washington D.C.",
-            Latitude:  38.897159,
-            Longitude: -77.036207,
+            ID:     4,
+            Name:   "Kim",
+            Age:    25,
+            Height: 150.2,
+            Weight: 48.0,
         },
         {
-            ID:        4,
-            Capital:   "London",
-            Latitude:  51.499183,
-            Longitude: -0.12464066,
-        },
-        {
-            ID:        6,
-            Capital:   "Brasilia",
-            Latitude:  -15.799668,
-            Longitude: -47.864154,
+            ID:     1,
+            Name:   "Tom",
+            Age:    20,
+            Height: 175.5,
+            Weight: 70.0,
         },
     }
 
-    sortutil.Order(countries).Asc("ID")
+    sortutil.Order(countries).Asc("ID").Exec()
 
     // or
-    // sortutil.Order(countries).Desc("ID")
+    // sortutil.Order(countries).Asc("ID").Desc("Name").Exec()
+    // sortutil.Order(countries).Asc("ID").Desc("Name").Asc("Height").Exec()
 }
 ```
 
