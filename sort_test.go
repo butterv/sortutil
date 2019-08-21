@@ -1,6 +1,7 @@
 package sortutil
 
 import (
+	"fmt"
 	"math/rand"
 	"sort"
 	"testing"
@@ -17,7 +18,7 @@ type Test struct {
 
 var tests = []Test{
 	{
-		ID:     1,
+		ID:     11,
 		Name:   "Tom",
 		Age:    20,
 		Height: 170.5,
@@ -38,6 +39,13 @@ var tests = []Test{
 		Weight: 75.0,
 	},
 	{
+		ID:     6,
+		Name:   "Sam",
+		Age:    25,
+		Height: 188.0,
+		Weight: 80.0,
+	},
+	{
 		ID:     3,
 		Name:   "Angie",
 		Age:    20,
@@ -45,11 +53,18 @@ var tests = []Test{
 		Weight: 55.0,
 	},
 	{
-		ID:     6,
+		ID:     13,
 		Name:   "Sam",
 		Age:    25,
 		Height: 178.5,
 		Weight: 73.0,
+	},
+	{
+		ID:     10,
+		Name:   "Tim",
+		Age:    20,
+		Height: 172.0,
+		Weight: 67.0,
 	},
 	{
 		ID:     2,
@@ -59,11 +74,39 @@ var tests = []Test{
 		Weight: 70.0,
 	},
 	{
+		ID:     8,
+		Name:   "Hannah",
+		Age:    18,
+		Height: 156.5,
+		Weight: 42.0,
+	},
+	{
 		ID:     4,
 		Name:   "Kim",
 		Age:    25,
 		Height: 150.2,
 		Weight: 48.0,
+	},
+	{
+		ID:     12,
+		Name:   "Bob",
+		Age:    30,
+		Height: 177.5,
+		Weight: 75.0,
+	},
+	{
+		ID:     9,
+		Name:   "Jon",
+		Age:    25,
+		Height: 184.0,
+		Weight: 85.0,
+	},
+	{
+		ID:     1,
+		Name:   "Tom",
+		Age:    20,
+		Height: 175.5,
+		Weight: 70.0,
 	},
 }
 
@@ -158,18 +201,21 @@ func TestSort_Order_Asc_And_Asc(t *testing.T) {
 	t.Run("order by Age asc and Name asc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("Age: %d, Name: %s, ", test.Age, test.Name)
+			t.Logf("ID: %02d, Age: %d, Name: %s", test.ID, test.Age, test.Name)
 		}
 
 		Order(tempTests).Asc("Age").Asc("Name").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("Age: %d, Name: %s, ", test.Age, test.Name)
+			t.Logf("ID: %02d, Age: %d, Name: %s", test.ID, test.Age, test.Name)
 		}
 
 		sortFunc := func(i, j int) bool {
 			if tempTests[i].Age < tempTests[j].Age {
 				return true
+			}
+			if tempTests[i].Age > tempTests[j].Age {
+				return false
 			}
 			return tempTests[i].Name < tempTests[j].Name
 		}
@@ -177,7 +223,43 @@ func TestSort_Order_Asc_And_Asc(t *testing.T) {
 			t.Fatal("incomplete sort")
 		}
 	})
+}
 
+func TestSort_Order_Asc_And_Asc_And_Asc(t *testing.T) {
+	tempTests := make([]Test, len(tests))
+	copy(tempTests, tests)
+
+	t.Run("order by Age asc and Name asc and Height asc", func(t *testing.T) {
+		t.Log("=== before ===")
+		for _, test := range tempTests {
+			t.Logf("%-30s Height: %.1f", fmt.Sprintf("ID: %02d, Age: %d, Name: %s,", test.ID, test.Age, test.Name), test.Height)
+		}
+
+		Order(tempTests).Asc("Age").Asc("Name").Asc("Height").Exec()
+		t.Log("=== after ===")
+		for _, test := range tempTests {
+			t.Logf("%-30s Height: %.1f", fmt.Sprintf("ID: %02d, Age: %d, Name: %s,", test.ID, test.Age, test.Name), test.Height)
+		}
+
+		sortFunc := func(i, j int) bool {
+			if tempTests[i].Age < tempTests[j].Age {
+				return true
+			}
+			if tempTests[i].Age > tempTests[j].Age {
+				return false
+			}
+			if tempTests[i].Name < tempTests[j].Name {
+				return true
+			}
+			if tempTests[i].Name > tempTests[j].Name {
+				return false
+			}
+			return tempTests[i].Height < tempTests[j].Height
+		}
+		if !sort.SliceIsSorted(tempTests, sortFunc) {
+			t.Fatal("incomplete sort")
+		}
+	})
 }
 
 func TestSort_Order_Desc(t *testing.T) {
@@ -268,18 +350,21 @@ func TestSort_Order_Desc_And_Desc(t *testing.T) {
 	t.Run("order by Age desc and Name desc", func(t *testing.T) {
 		t.Log("=== before ===")
 		for _, test := range tempTests {
-			t.Logf("Age: %d, Name: %s, ", test.Age, test.Name)
+			t.Logf("ID: %02d, Age: %d, Name: %s", test.ID, test.Age, test.Name)
 		}
 
 		Order(tempTests).Desc("Age").Desc("Name").Exec()
 		t.Log("=== after ===")
 		for _, test := range tempTests {
-			t.Logf("Age: %d, Name: %s, ", test.Age, test.Name)
+			t.Logf("ID: %02d, Age: %d, Name: %s", test.ID, test.Age, test.Name)
 		}
 
 		sortFunc := func(i, j int) bool {
 			if tempTests[i].Age > tempTests[j].Age {
 				return true
+			}
+			if tempTests[i].Age < tempTests[j].Age {
+				return false
 			}
 			return tempTests[i].Name > tempTests[j].Name
 		}
@@ -287,7 +372,80 @@ func TestSort_Order_Desc_And_Desc(t *testing.T) {
 			t.Fatal("incomplete sort")
 		}
 	})
+}
 
+func TestSort_Order_Desc_And_Desc_And_Desc(t *testing.T) {
+	tempTests := make([]Test, len(tests))
+	copy(tempTests, tests)
+
+	t.Run("order by Age desc and Name desc and Height desc", func(t *testing.T) {
+		t.Log("=== before ===")
+		for _, test := range tempTests {
+			t.Logf("%-30s Height: %.1f", fmt.Sprintf("ID: %02d, Age: %d, Name: %s,", test.ID, test.Age, test.Name), test.Height)
+		}
+
+		Order(tempTests).Desc("Age").Desc("Name").Desc("Height").Exec()
+		t.Log("=== after ===")
+		for _, test := range tempTests {
+			t.Logf("%-30s Height: %.1f", fmt.Sprintf("ID: %02d, Age: %d, Name: %s,", test.ID, test.Age, test.Name), test.Height)
+		}
+
+		sortFunc := func(i, j int) bool {
+			if tempTests[i].Age > tempTests[j].Age {
+				return true
+			}
+			if tempTests[i].Age < tempTests[j].Age {
+				return false
+			}
+			if tempTests[i].Name > tempTests[j].Name {
+				return true
+			}
+			if tempTests[i].Name < tempTests[j].Name {
+				return false
+			}
+			return tempTests[i].Height > tempTests[j].Height
+		}
+		if !sort.SliceIsSorted(tempTests, sortFunc) {
+			t.Fatal("incomplete sort")
+		}
+	})
+}
+
+func TestSort_Order_Desc_And_Asc_And_Desc(t *testing.T) {
+	tempTests := make([]Test, len(tests))
+	copy(tempTests, tests)
+
+	t.Run("order by Age desc and Name desc and Height desc", func(t *testing.T) {
+		t.Log("=== before ===")
+		for _, test := range tempTests {
+			t.Logf("%-30s Height: %.1f", fmt.Sprintf("ID: %02d, Age: %d, Name: %s,", test.ID, test.Age, test.Name), test.Height)
+		}
+
+		Order(tempTests).Desc("Age").Asc("Name").Desc("Height").Exec()
+		t.Log("=== after ===")
+		for _, test := range tempTests {
+			t.Logf("%-30s Height: %.1f", fmt.Sprintf("ID: %02d, Age: %d, Name: %s,", test.ID, test.Age, test.Name), test.Height)
+		}
+
+		sortFunc := func(i, j int) bool {
+			if tempTests[i].Age > tempTests[j].Age {
+				return true
+			}
+			if tempTests[i].Age < tempTests[j].Age {
+				return false
+			}
+			if tempTests[i].Name < tempTests[j].Name {
+				return true
+			}
+			if tempTests[i].Name > tempTests[j].Name {
+				return false
+			}
+			return tempTests[i].Height > tempTests[j].Height
+		}
+		if !sort.SliceIsSorted(tempTests, sortFunc) {
+			t.Fatal("incomplete sort")
+		}
+	})
 }
 
 func randStringRunes(n int) string {
@@ -366,6 +524,74 @@ func BenchmarkSort_Order_By_Height_Asc(b *testing.B) {
 	Order(tempTests).Asc("Height").Exec()
 
 	sortFunc := func(i, j int) bool {
+		return tempTests[i].Height < tempTests[j].Height
+	}
+	if !sort.SliceIsSorted(tempTests, sortFunc) {
+		b.Fatal("incomplete sort")
+	}
+}
+
+func BenchmarkSort_Order_By_Age_Asc_And_Name_Asc(b *testing.B) {
+	rand.Seed(time.Now().Unix())
+
+	var tempTests []Test
+	for i := 0; i < 10000; i++ {
+		tempTests = append(tempTests, Test{
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
+		})
+	}
+
+	b.ResetTimer()
+	Order(tempTests).Asc("Age").Asc("Name").Exec()
+
+	sortFunc := func(i, j int) bool {
+		if tempTests[i].Age < tempTests[j].Age {
+			return true
+		}
+		if tempTests[i].Age > tempTests[j].Age {
+			return false
+		}
+		return tempTests[i].Name < tempTests[j].Name
+	}
+	if !sort.SliceIsSorted(tempTests, sortFunc) {
+		b.Fatal("incomplete sort")
+	}
+}
+
+func BenchmarkSort_Order_By_Age_Asc_And_Name_Asc_And_Height_Asc(b *testing.B) {
+	rand.Seed(time.Now().Unix())
+
+	var tempTests []Test
+	for i := 0; i < 10000; i++ {
+		tempTests = append(tempTests, Test{
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
+		})
+	}
+
+	b.ResetTimer()
+	Order(tempTests).Asc("Age").Asc("Name").Asc("Height").Exec()
+
+	sortFunc := func(i, j int) bool {
+		if tempTests[i].Age < tempTests[j].Age {
+			return true
+		}
+		if tempTests[i].Age > tempTests[j].Age {
+			return false
+		}
+		if tempTests[i].Name < tempTests[j].Name {
+			return true
+		}
+		if tempTests[i].Name > tempTests[j].Name {
+			return false
+		}
 		return tempTests[i].Height < tempTests[j].Height
 	}
 	if !sort.SliceIsSorted(tempTests, sortFunc) {

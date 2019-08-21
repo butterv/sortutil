@@ -17,6 +17,7 @@ const (
 )
 
 const (
+	// MaxConditions is maximum number of conditions.
 	MaxConditions int = 3
 )
 
@@ -108,7 +109,7 @@ func (s *Sort) Exec() {
 		sortFunc = s.sortByThree()
 	}
 
-	sort.Slice(s.slice, sortFunc)
+	sort.SliceStable(s.slice, sortFunc)
 }
 
 func (s *Sort) sortByOne() func(i, j int) bool {
@@ -116,22 +117,40 @@ func (s *Sort) sortByOne() func(i, j int) bool {
 }
 
 func (s *Sort) sortByTwo() func(i, j int) bool {
+	func1 := s.sort(0)
+	func2 := s.sort(1)
 	return func(i, j int) bool {
-		if s.sort(0)(i, j) {
+		if func1(i, j) {
 			return true
 		}
-		return s.sort(1)(i, j)
+		if func1(j, i) {
+			return false
+		}
+
+		return func2(i, j)
 	}
 }
 
 func (s *Sort) sortByThree() func(i, j int) bool {
+	func1 := s.sort(0)
+	func2 := s.sort(1)
+	func3 := s.sort(2)
 	return func(i, j int) bool {
-		if s.sort(0)(i, j) {
-			return true
-		} else if s.sort(1)(i, j) {
+		if func1(i, j) {
 			return true
 		}
-		return s.sort(2)(i, j)
+		if func1(j, i) {
+			return false
+		}
+
+		if func2(i, j) {
+			return true
+		}
+		if func2(j, i) {
+			return false
+		}
+
+		return func3(i, j)
 	}
 }
 
