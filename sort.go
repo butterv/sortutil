@@ -18,7 +18,7 @@ const (
 
 const (
 	// MaxConditions is maximum number of conditions.
-	MaxConditions int = 3
+	MaxConditions int = 5
 )
 
 // Sort struct has list of targets.
@@ -98,60 +98,48 @@ func (s *Sort) sorted(name string) bool {
 
 // Exec performs a sort
 func (s *Sort) Exec() {
-	var sortFunc func(i, j int) bool
+	sort.SliceStable(s.slice, s.makeSortFuncs(len(s.sortConditions)))
+}
 
-	switch len(s.sortConditions) {
-	case 1:
-		sortFunc = s.sortByOne()
-	case 2:
-		sortFunc = s.sortByTwo()
-	case 3:
-		sortFunc = s.sortByThree()
+func (s *Sort) makeSortFuncs(count int) func(i, j int) bool {
+	var funcs []func(i, j int) bool
+	for i := 0; i < count; i++ {
+		funcs = append(funcs, s.sort(i))
 	}
 
-	sort.SliceStable(s.slice, sortFunc)
-}
-
-func (s *Sort) sortByOne() func(i, j int) bool {
-	return s.sort(0)
-}
-
-func (s *Sort) sortByTwo() func(i, j int) bool {
-	func1 := s.sort(0)
-	func2 := s.sort(1)
 	return func(i, j int) bool {
-		if func1(i, j) {
-			return true
-		}
-		if func1(j, i) {
-			return false
+		for _, ff := range funcs[:count-1] {
+			if ff(i, j) {
+				return true
+			}
+			if ff(j, i) {
+				return false
+			}
 		}
 
-		return func2(i, j)
+		return funcs[count-1](i, j)
 	}
-}
-
-func (s *Sort) sortByThree() func(i, j int) bool {
-	func1 := s.sort(0)
-	func2 := s.sort(1)
-	func3 := s.sort(2)
-	return func(i, j int) bool {
-		if func1(i, j) {
-			return true
-		}
-		if func1(j, i) {
-			return false
-		}
-
-		if func2(i, j) {
-			return true
-		}
-		if func2(j, i) {
-			return false
-		}
-
-		return func3(i, j)
-	}
+	//
+	//func1 := s.sort(0)
+	//func2 := s.sort(1)
+	//func3 := s.sort(2)
+	//return func(i, j int) bool {
+	//	if func1(i, j) {
+	//		return true
+	//	}
+	//	if func1(j, i) {
+	//		return false
+	//	}
+	//
+	//	if func2(i, j) {
+	//		return true
+	//	}
+	//	if func2(j, i) {
+	//		return false
+	//	}
+	//
+	//	return func3(i, j)
+	//}
 }
 
 func (s *Sort) sort(index int) func(i, j int) bool {
