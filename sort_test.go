@@ -720,7 +720,7 @@ func BenchmarkSort_Order_By_Age_Desc_And_Name_Desc_And_Height_Desc(b *testing.B)
 	}
 
 	b.ResetTimer()
-	Order(tempTests).Asc("Age").Asc("Name").Asc("Height").Exec()
+	Order(tempTests).Desc("Age").Desc("Name").Desc("Height").Exec()
 
 	sortFunc := func(i, j int) bool {
 		if tempTests[i].Age > tempTests[j].Age {
