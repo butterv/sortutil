@@ -7,4 +7,7 @@ require (
 	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
 	golang.org/x/text v0.3.2 // indirect
 	golang.org/x/tools v0.0.0-20190807223507-b346f7fd45de // indirect
+	golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7
 )
+
+go 1.13

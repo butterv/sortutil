@@ -119,27 +119,6 @@ func (s *Sort) makeSortFuncs(count int) func(i, j int) bool {
 
 		return funcs[count-1](i, j)
 	}
-	//
-	//func1 := s.sort(0)
-	//func2 := s.sort(1)
-	//func3 := s.sort(2)
-	//return func(i, j int) bool {
-	//	if func1(i, j) {
-	//		return true
-	//	}
-	//	if func1(j, i) {
-	//		return false
-	//	}
-	//
-	//	if func2(i, j) {
-	//		return true
-	//	}
-	//	if func2(j, i) {
-	//		return false
-	//	}
-	//
-	//	return func3(i, j)
-	//}
 }
 
 func (s *Sort) sort(index int) func(i, j int) bool {
