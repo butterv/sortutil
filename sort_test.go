@@ -741,3 +741,59 @@ func BenchmarkSort_Order_By_Age_Desc_And_Name_Desc_And_Height_Desc(b *testing.B)
 		b.Fatal("incomplete sort")
 	}
 }
+
+func BenchmarkSort_Order_By_Age_Desc_And_Name_Desc_And_Height_Desc_Retry(b *testing.B) {
+	rand.Seed(time.Now().Unix())
+
+	var tempTests []Test
+	for i := 0; i < 10000; i++ {
+		tempTests = append(tempTests, Test{
+			ID:     rand.Uint64(),
+			Name:   randStringRunes(5),
+			Age:    uint(rand.Uint32()),
+			Height: rand.Float32(),
+			Weight: rand.Float32(),
+		})
+	}
+
+	b.ResetTimer()
+	Order(tempTests).Desc("Age").Desc("Name").Desc("Height").Exec()
+	sortFunc1 := func(i, j int) bool {
+		if tempTests[i].Age > tempTests[j].Age {
+			return true
+		}
+		if tempTests[i].Age < tempTests[j].Age {
+			return false
+		}
+		if tempTests[i].Name > tempTests[j].Name {
+			return true
+		}
+		if tempTests[i].Name < tempTests[j].Name {
+			return false
+		}
+		return tempTests[i].Height > tempTests[j].Height
+	}
+	if !sort.SliceIsSorted(tempTests, sortFunc1) {
+		b.Fatal("incomplete sort")
+	}
+
+	Order(tempTests).Asc("Age").Asc("Name").Asc("Height").Exec()
+	sortFunc2 := func(i, j int) bool {
+		if tempTests[i].Age < tempTests[j].Age {
+			return true
+		}
+		if tempTests[i].Age > tempTests[j].Age {
+			return false
+		}
+		if tempTests[i].Name < tempTests[j].Name {
+			return true
+		}
+		if tempTests[i].Name > tempTests[j].Name {
+			return false
+		}
+		return tempTests[i].Height < tempTests[j].Height
+	}
+	if !sort.SliceIsSorted(tempTests, sortFunc2) {
+		b.Fatal("incomplete sort")
+	}
+}
